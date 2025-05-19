@@ -14,6 +14,8 @@ Chapter 2
        Throughout the proof, if Lean4 did not raise any error in the process and the goal is accomplished, then the proof is believed to be correct.
     2. To rewrite one assumption based on another propositions.
        i.e. rw [<theorem>] at <assumption> -- Apply a theorem to an assumption so that the content in the assumption is changed.
+    nth_rw (rewrite when encounter the nth pattern)
+    i.e. nth_rw k [<theorem>] -- Theorem activates when the kth applicable pattern is found.
 ·Introduced Keyword: calc (proof by algebraic calculation)
     To indicate that the goal is achieved by different proof blocks that relate LHS and RHS algebraically.
     i.e. calc
@@ -26,3 +28,5 @@ Chapter 2
 ·Introduced Tactic: exact (an assumption exactly matches the goal)
     To announce that the content of the assumption is exactly the goal.
     i.e. exact <assumption> -- Usually at the end of rewriting the assumption.
+·Introduced Tactic: ring (contains all ring axiom)
+    Automatically prove any trivial result that follows purely from the commutative ring axioms.
