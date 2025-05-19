@@ -1,3 +1,5 @@
+Re-cloned and created a new fork from the repo to add logs. Cleared some problematic usage of GitHub.
+
 Chapter 2
 ·Introduced Tactic: rw (rewrite)
     To replace the LHS indentity with the RHS goal.
