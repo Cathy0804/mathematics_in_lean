@@ -93,6 +93,7 @@ example : (a + b) * (a + b) = a * a + 2 * (a * b) + b * b :=
     _ = a * a + 2 * (a * b) + b * b := by
       rw [mul_comm b a, ← two_mul]
 
+-- This is the outline of the previous proof.
 example : (a + b) * (a + b) = a * a + 2 * (a * b) + b * b :=
   calc
     (a + b) * (a + b) = a * a + b * a + (a * b + b * b) := by
@@ -109,13 +110,47 @@ section
 variable (a b c d : ℝ)
 
 example : (a + b) * (c + d) = a * c + a * d + b * c + b * d := by
-  sorry
+  rw [add_mul a b (c + d)] -- a * (c + d) + b * (c + d)
+  rw [mul_add a c d]
+  rw [mul_add b c d] -- ac + ad + bc + bd
+  rw [← add_assoc]
+
+example : (a + b) * (c + d) = a * c + a * d + b * c + b * d := by
+  calc
+    (a + b) * (c + d) = a * (c + d) + b * (c + d) := by
+      rw [add_mul a b (c + d)]
+    _ = a * c + a * d + (b * c + b * d) := by
+      rw [mul_add a c d, mul_add b c d]
+    _ = a * c + a * d + b * c + b * d := by
+      rw [← add_assoc]
 
 example (a b : ℝ) : (a + b) * (a - b) = a ^ 2 - b ^ 2 := by
-  sorry
+  rw [mul_sub (a + b) a b] -- (a + b) * a - (a + b) * b
+  rw [add_mul a b a, add_mul a b b] -- a * a + b * a - (a * b + b * b)
+  rw [← pow_two a, ← pow_two b] -- a ^ 2 + b * a - (a * b + b ^ 2)
+  rw [mul_comm b a] -- a ^ 2 + a * b - (a * b + b ^ 2)
+  rw [← sub_sub] -- a ^ 2 + a * b - a * b - b ^ 2
+  rw [← add_sub] -- a ^ 2 + (a * b - a * b) - b ^ 2
+  rw [sub_self (a * b)] -- a ^ 2 + 0 - b ^ 2
+  rw [add_zero]
+
+example (a b : ℝ) : (a + b) * (a - b) = a ^ 2 - b ^ 2 := by
+  calc
+    (a + b) * (a - b) = a ^ 2 + b * a - (a * b + b ^ 2) := by
+      rw [mul_sub]
+      rw [add_mul a b a, add_mul a b b]
+      rw [← pow_two a, ← pow_two b]
+    _ = a ^ 2 + (a * b - a * b) - b ^ 2 := by
+      rw [mul_comm b a]
+      rw [← sub_sub]
+      rw [← add_sub]
+    _ = a ^ 2 - b ^ 2 := by
+      rw [sub_self]
+      rw [add_zero]
 
 #check pow_two a
 #check mul_sub a b c
+#check mul_add
 #check add_mul a b c
 #check add_sub a b c
 #check sub_sub a b c
