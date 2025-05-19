@@ -2,7 +2,8 @@ Re-cloned and created a new fork from the repo to add logs. Cleared some problem
 
 Chapter 2
 ·Introduced Tactic: rw (rewrite)
-    1. To replace the LHS indentity with the RHS goal.
+    1. Looking for an applicable pattern throughout the goal statement which matches the LHS of the theorem,
+       then replace that pattern with RHS of the theorem.
        i.e. rw [<theorem> <objects s.t. the theorem applies to>] -- This applies the theorem from LHS to RHS.
             rw [\l <theorem> <objects s.t. the theorem applies to>] -- '\l' forms a left arrow. This applies the theorem from RHS to LHS.
        Lean4 is very specific about the theorems and the objects that the theorem applies to.
@@ -28,5 +29,16 @@ Chapter 2
 ·Introduced Tactic: exact (an assumption exactly matches the goal)
     To announce that the content of the assumption is exactly the goal.
     i.e. exact <assumption> -- Usually at the end of rewriting the assumption.
-·Introduced Tactic: ring (contains all ring axiom)
+·Introduced Tactic: apply (apply a theorem under a hypothesis/proposition)
+    To unify a theorem and a hypothesis, forming a new statement which is not necessarily the ultimate goal of the proof.
+    The missing pieces are either inferred automatically by Lean or become the next goal to prove.
+    i.e. apply <theorem> <hypothesis>
+·Introduced Tactic: ring (contains all commutative ring axiom)
     Automatically prove any trivial result that follows purely from the commutative ring axioms.
+    Commitativity is NOT promised by a ring in general.
+·Introduced Tactic: have (introduce a new goal as a proposition)
+    Once the new goal is accomplished, this proposition can be used to prove the main goal.
+    i.e. theorem <name of the theorem> (<type of the argument(s)>) : <statement of the theorem> := by
+           have <name of proposition> : <statement of proposition> := by
+             <proof of the proposition>
+           <main proof>
