@@ -2,16 +2,18 @@ Re-cloned and created a new fork from the repo to add logs. Cleared some problem
 
 Chapter 2
 ·Introduced Tactic: rw (rewrite)
-    To replace the LHS indentity with the RHS goal.
-    i.e. rw [<theorem> <objects s.t. the theorem applies to>] -- This applies the theorem from LHS to RHS.
-         rw [\l <theorem> <objects s.t. the theorem applies to>] -- '\l' forms a left arrow. This applies the theorem from RHS to LHS.
-    Lean4 is very specific about the theorems and the objects that the theorem applies to.
-    If the objects are unspecified or partially specified in the code,
-    Lean4 will look for the correct pattern from left to right and apply the theorem to the first pattern it finds.
-    Moreover, Lean4 always interprets a * b * c as (a * b) * c as a default setting. Be careful when using associativity theorems.
-    Some theorems automatically handle the default 'left-associativity', but some do not.
-    If Lean cannot find the respective pattern the try play with associativity.
-    Throughout the proof, if Lean4 did not raise any error in the process and the goal is accomplished, then the proof is believed to be correct.
+    1. To replace the LHS indentity with the RHS goal.
+       i.e. rw [<theorem> <objects s.t. the theorem applies to>] -- This applies the theorem from LHS to RHS.
+            rw [\l <theorem> <objects s.t. the theorem applies to>] -- '\l' forms a left arrow. This applies the theorem from RHS to LHS.
+       Lean4 is very specific about the theorems and the objects that the theorem applies to.
+       If the objects are unspecified or partially specified in the code,
+       Lean4 will look for the correct pattern from left to right and apply the theorem to the first pattern it finds.
+       Moreover, Lean4 always interprets a * b * c as (a * b) * c as a default setting. Be careful when using associativity theorems.
+       Some theorems automatically handle the default 'left-associativity', but some do not.
+       If Lean cannot find the respective pattern the try play with associativity.
+       Throughout the proof, if Lean4 did not raise any error in the process and the goal is accomplished, then the proof is believed to be correct.
+    2. To rewrite one assumption based on another propositions.
+       i.e. rw [<theorem>] at <assumption> -- Apply a theorem to an assumption so that the content in the assumption is changed.
 ·Introduced Keyword: calc (proof by algebraic calculation)
     To indicate that the goal is achieved by different proof blocks that relate LHS and RHS algebraically.
     i.e. calc
@@ -21,3 +23,6 @@ Chapter 2
              <proof block 2> -- A proof block that shows B ~ C.
            _ ~ D := by       -- Etc.
              <proof block 3>
+·Introduced Tactic: exact (an assumption exactly matches the goal)
+    To announce that the content of the assumption is exactly the goal.
+    i.e. exact <assumption> -- Usually at the end of rewriting the assumption.
