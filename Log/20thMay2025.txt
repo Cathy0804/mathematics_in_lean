@@ -9,3 +9,38 @@
 ·Introduced Tactic: noncomm_ring
     Automatically prove any trivial result that follows purely from the non-commutative ring axioms.
     Notice that type Ring follows tactic 'noncomm_ring', and type CommRing follows the tactic 'ring'.
+·Lemma: le_refl (reflexivity)
+    In Lean, lemma tends to work like a function. It takes in propositions, apply the lemma to the input, and gives a proposition as the output.
+    le_refl ia kind of special as it takes in one argument, x, and gives 'x <= x'. Thus, le_refl can also be used as a theorem.
+    i.e. example (x : Real) : x <= x :=
+           le_refl x -- Produces x <= x based on reflexivity.
+·Lemma: le_trans (transitivity)
+    Taking in two inequalities and produce the third inequality based on transitivity of ordered sets.
+    i.e. example (x y z : Real) (h0 : x <= y) (h1 : y <= z) : x <= z :=
+           le_trans h0 h1 -- Produces x <= z based on transitivity.
+More ways of using lemmas can be checked on p14 of the book, and more lemmas are on p15 of the book.
+·Introduced Tactic: linarith (linear arithmetic)
+    To handle linear arithmetics automatically.
+    It collects all linear relations over the section and tries to reach the goal by using linear arithmetics such as plus, minus, transitivity, etc.
+    It can be used either stand-alone or with other lemmas\theorems (just like what rw does).
+·Reviewed Tactic: apply
+    Since we have more diversed lemmas, the tactic 'apply' has a more general usage. If we apply a lemma,
+    lean will try its best to match the so-called RHS of that lemma with the current goal and look for the pre-requisites for the lemma to work.
+    If there is any un-met pre-requisite, then it becomes the new current goal. We can either apply more lemmas to accomplish the goal,
+    or use other tactics to prove the current goal. It is a bit like backward-working.
+·Introduced Projections: .mp and .mpr (LtR and RtL)
+    For h : P iff Q, h.mp is (P to Q) and h.mpr is (Q to P).
+A compressed example together with several techniques:
+example : |a*b| ≤ (a^2 + b^2)/2 := by
+  apply abs_le'.mpr -- Use law of absolute values in real numbers to turn the goal into a conjunction.
+  constructor -- This tactic split the conjunction into two sub-goals.
+  · have h : 0 ≤ a^2 - 2*a*b + b^2 -- Using dot to indicate the different sub-goals we are working on.
+    calc
+      a^2 - 2*a*b + b^2 = (a - b)^2 := by ring -- More compressed tactic usage.
+      _ ≥ 0 := by apply pow_two_nonneg
+    linarith -- Reason out the sub-goal from all expressions mentioned (using linear arithmetics).
+  · have h' : 0 ≤ a^2 + 2*a*b + b^2 -- The structure is the same as in the first sub-goal.
+    calc
+      a^2 + 2*a*b + b^2 = (a + b)^2 := by ring
+      _ ≥ 0 := by apply pow_two_nonneg
+    linarith
