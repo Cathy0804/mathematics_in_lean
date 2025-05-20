@@ -35,7 +35,7 @@ Chapter 2
     i.e. apply <theorem> <hypothesis>
 ·Introduced Tactic: ring (contains all commutative ring axiom)
     Automatically prove any trivial result that follows purely from the commutative ring axioms.
-    Commitativity is NOT promised by a ring in general.
+    Commutativity is NOT promised by the type Ring in general.
 ·Introduced Tactic: have (introduce a new goal as a proposition)
     Once the new goal is accomplished, this proposition can be used to prove the main goal.
     i.e. theorem <name of the theorem> (<type of the argument(s)>) : <statement of the theorem> := by

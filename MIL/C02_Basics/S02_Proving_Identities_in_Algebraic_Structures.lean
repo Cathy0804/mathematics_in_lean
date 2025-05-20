@@ -78,17 +78,24 @@ theorem zero_mul (a : R) : 0 * a = 0 := by
   apply add_left_cancel h
 
 theorem neg_eq_of_add_eq_zero {a b : R} (h : a + b = 0) : -a = b := by
-  sorry
+  have h' : -a + a + b = -a := by
+    rw [add_assoc, h, add_zero]
+  rw [← h', neg_add_cancel, zero_add]
 
 theorem eq_neg_of_add_eq_zero {a b : R} (h : a + b = 0) : a = -b := by
-  sorry
+  have h' : a + b + -b = -b := by
+    rw [h, zero_add]
+  rw [← h', add_assoc, add_neg_cancel, add_zero]
 
 theorem neg_zero : (-0 : R) = 0 := by
   apply neg_eq_of_add_eq_zero
   rw [add_zero]
 
 theorem neg_neg (a : R) : - -a = a := by
-  sorry
+  have h : a + -a + - -a = a + -a + a := by
+    rw [add_assoc, add_neg_cancel, add_zero, add_neg_cancel, zero_add]
+  rw [add_neg_cancel, zero_add, zero_add] at h
+  exact h
 
 end MyRing
 
@@ -111,13 +118,15 @@ namespace MyRing
 variable {R : Type*} [Ring R]
 
 theorem self_sub (a : R) : a - a = 0 := by
-  sorry
+  have h : a - a = a + -a := by
+    rw [sub_eq_add_neg]
+  rw [h, add_neg_cancel]
 
 theorem one_add_one_eq_two : 1 + 1 = (2 : R) := by
   norm_num
 
 theorem two_mul (a : R) : 2 * a = a + a := by
-  sorry
+  rw [← one_add_one_eq_two, add_mul, one_mul]
 
 end MyRing
 
@@ -140,13 +149,31 @@ variable {G : Type*} [Group G]
 namespace MyGroup
 
 theorem mul_inv_cancel (a : G) : a * a⁻¹ = 1 := by
-  sorry
+  have h : (a * a⁻¹)⁻¹ * (a * a⁻¹ * (a * a⁻¹)) = 1 := by
+    nth_rw 2 [← mul_assoc]
+    rw [mul_assoc a a⁻¹ a]
+    rw [inv_mul_cancel]
+    rw [mul_assoc]
+    rw [one_mul]
+    rw [inv_mul_cancel]
+  rw [← mul_assoc, inv_mul_cancel, one_mul] at h
+  exact h
 
 theorem mul_one (a : G) : a * 1 = a := by
-  sorry
+  rw [← inv_mul_cancel a, ← mul_assoc, mul_inv_cancel, one_mul]
 
 theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ := by
-  sorry
+  have right_eq_mul_cancel {a b c : G} (hyp : a * c = b * c) : a = b := by
+    rw [← mul_one a, ← mul_inv_cancel c, ← mul_assoc, hyp, mul_assoc, mul_inv_cancel, mul_one]
+  have h1 : (a * b)⁻¹ * (a * b) = 1 := by
+    rw [inv_mul_cancel]
+  have h2 : (b⁻¹ * a⁻¹) * (a * b) = 1 := by
+    rw [← mul_assoc, mul_assoc b⁻¹ a⁻¹ a, inv_mul_cancel, mul_one, inv_mul_cancel]
+  have h3 : (a * b)⁻¹ * (a * b) = (b⁻¹ * a⁻¹) * (a * b) := by
+    rw [h1, ← h2]
+  apply right_eq_mul_cancel at h3
+  exact h3
+
 
 end MyGroup
 

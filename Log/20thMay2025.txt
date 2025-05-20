@@ -1,0 +1,11 @@
+·Introduced Tactic: rfl (reflexivity)
+    Forcing Lean to recognise that the expressions on both LHS and RHS are equivalent.
+·Introduced Tactic: norm_num (normal number arithmetic)
+    Automatically calculating and recognising the result of number arithmetics as part of the proof.
+·Introduced Tactic: group
+    Automatically prove any trivial result that follows purely from the non-commutative, multiplicative group axioms.
+·Introduced Tactic: abel
+    Automatically prove any trivial result that follows purely from the abelian additive group axioms.
+·Introduced Tactic: noncomm_ring
+    Automatically prove any trivial result that follows purely from the non-commutative ring axioms.
+    Notice that type Ring follows tactic 'noncomm_ring', and type CommRing follows the tactic 'ring'.
