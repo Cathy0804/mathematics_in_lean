@@ -1,0 +1,7 @@
+Mainly practising how to combine the tactics mentioned before to form effective proofs.
+·Introduced Tactic: trans (transitivity)
+    Suggesting a intermediate term for applying transitivity of some ordering.
+    i.e. example : (h : x < y) (h' : y < z) x < z := by
+           trans y -- Suggests y to bridge the chasm of x < z, requires x < y and y < z as pre-requisites.
+           apply h
+           apply h' -- Provides the pre-requisites.
