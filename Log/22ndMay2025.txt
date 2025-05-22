@@ -1,0 +1,26 @@
+Chapter 3
+·Reviewed Tactic: intro
+    To introduce arbitrary variables or pre-requisites of a proposition.
+    i.e. example \forall a b : \N, a = b -> b = a := by
+           intro a b h -- Introduce variables a, b and the pre-requisite, h.
+           exact Eq.symm h -- h is treated like a given hypothesis.
+    In this case h is treated as assuming the pre-requisite is true and prove that the pre-requisite implies the goal.
+    Thus the implication is proved to be true.
+·Introduced Property: Monotone
+    To indicate that a function is non-decreasing.
+    i.e. example (f : \R -> \R) (h : Monotone f) : \forall {a, b}, a <= b -> f a <= f b := @h
+
+Using Proof Term Instead of Tactics
+    Writing proofs in Lean is essentially constructing a term that matches the type of the goal. If the goal is a proposition of certain variables,
+    then it is also a Lean function of those variables. Such functions take arbitrary values and hypothesis as inputs, and give the implied statement as the output.
+    Alas, if we construct an appropriate function directly with every step specified, this function-statement will automatically accomplish the goal.
+    Thus, we can write proofs in a more concise manner, i.e.
+    example (mf : Monotone f) (mg : Monotone g) : Monotone fun x ↦ f x + g x :=
+      fun a b aleb ↦ add_le_add (mf aleb) (mg aleb)
+    'fun a b aleb' means that we are constructing a function that takes in arbitrary values a and b, and a hypothesis a <= b.
+    The arrow means that we are processing the inputs as such:
+    step 1 - apply add_le_add as if we are using the 'apply' tactic
+    step 2 - apply mf given aleb to provide one of the pre-requisites
+    step 3 - apply mg given aleb to provide the other pre-requisite
+    The output of our constructed function will agree with the goal statement.
+    And of course, the construction of 'helper function' can be used together with most of the techniques in Lean.
