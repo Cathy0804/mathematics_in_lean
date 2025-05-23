@@ -9,6 +9,7 @@ Chapter 3
 ·Introduced Property: Monotone
     To indicate that a function is non-decreasing.
     i.e. example (f : \R -> \R) (h : Monotone f) : \forall {a, b}, a <= b -> f a <= f b := @h
+There are many other properties that can be stated right before an object.
 
 Using Proof Term Instead of Tactics
     Writing proofs in Lean is essentially constructing a term that matches the type of the goal. If the goal is a proposition of certain variables,
@@ -24,3 +25,22 @@ Using Proof Term Instead of Tactics
     step 3 - apply mg given aleb to provide the other pre-requisite
     The output of our constructed function will agree with the goal statement.
     And of course, the construction of 'helper function' can be used together with most of the techniques in Lean.
+
+·Introduced Tactic: use
+    To suggest an example or a counter-example to prove or disprove the proposition.
+    i.e. use <some example>
+
+Destructing Arguments
+·Introduced Tactic: rcases
+    To extract the variable and its property from a statement with existential quantifier.
+    i.e. example (h: \exist x, P x) : True := by -- P is some property of x
+           rcases h with \<x, Px\>
+           trivial
+    Activating this tactic adds a variable, x, and a hypothesis, Px, saying that x has property P.
+·Introduced Tactic: rintro
+    The combination of intro and rcases.
+    It allows us to introduce variables & hypothesis, and matches their patterns with the original statement at the same time.
+·Introduced Tactic: obtain
+    Another way of forming relevant variables and hypothesis from a given proposition.
+    i.e. obtain \<x, Px\> := h -- Continued from the previous cases.
+More alternative methods are provided on p32 of the book.
