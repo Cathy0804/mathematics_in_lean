@@ -32,7 +32,7 @@ Using Proof Term Instead of Tactics
 
 Destructing Arguments
 ·Introduced Tactic: rcases
-    To extract the variable and its property from a statement with existential quantifier.
+    To extract the variable and its property from a given hypothesis with existential quantifier.
     i.e. example (h: \exist x, P x) : True := by -- P is some property of x
            rcases h with \<x, Px\>
            trivial

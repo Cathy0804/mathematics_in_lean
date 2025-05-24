@@ -32,9 +32,9 @@ example : ¬FnHasUb fun x ↦ x := by
   linarith
 
 example (h : Monotone f) (h' : f a < f b) : a < b := by
-  apply lt_of_not_ge
-  intro h''
-  apply absurd h'
+  apply lt_of_not_ge -- change the goal to ¬ a ≥ b or ¬ b ≤ a
+  intro h'' -- introduce the original proposition as a hypothesis (a < b)
+  apply absurd h' -- activates proof by contradiction by using absurd. WTS h'' contradicts h'
   apply not_lt_of_ge (h h'')
 
 example (h : a ≤ b) (h' : f b < f a) : ¬Monotone f := by
@@ -108,4 +108,3 @@ example (h : ¬Monotone f) : ∃ x y, x ≤ y ∧ f y < f x := by
   exact h
 
 end
-

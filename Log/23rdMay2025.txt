@@ -1,0 +1,37 @@
+·Introduced Tactic: dsimp (definition simplifying)
+    To unfold a term of definition by replacing the term with respective definition.
+    This tactic pattern-matches according to the context of the proof.
+·Introduced Tactic: let
+    To construct some local definition and add it to the context.
+·Introduced Tactic: by_contra (proof by contradiction)
+    To activate proof by contradiction about the goal Q by assuming not Q.
+    i.e. by_contra h' -- Gives an assumpting of h', which is the negation of the goal.
+·Introduced Tactic: push_neg
+    To 'push the negation sign inward': \not \forall x, P x becomes \exist x, \not P x.
+    i.e. push_neg at h -- For some given hypothesis h.
+·Introduced Tactic: contrapose (proof by contrapositive)
+    For goals like A implies B, this tactic changes the goal to '\not B implies \not A'.
+    i.e. example (h : A) : B := by
+           contrapose h -- Gives a new goal (h' : \not B) : \not A.
+    contrapose! is a stronger version that also applies push_neg to both goal and hypothesis.
+
+[IMPORTANT] Dealing with Quantifiers
+[Universal Quantifier - intro] Recall that intro introduces an arbitrary variable (including hypothesis). When the goal contains the universal quantifier like \forall P x, Q x,
+using intro x will introduce an arbitrary x under property P to the context. Then we can use this x to prove that Q is also true for such x,
+so the goal can be accomplished.
+[Negation - intro] Moreover, if the goal is of the form \not P, then intro h will introduce a hypothesis h : Q to the context.
+Then we can use h to carry out proof by contradiction to prove that h cannot hold.
+[Negation - push_neg] This 'opens up' the negation sign, making it easier to work with. It provides a much natural way to deal with the statements.
+[Existential Quantifier - use] For goals like \exist x, P x, if we want to prove it by giving examples, we can use 'use x',
+then the goal will change to proving P x.
+[Existential Quantifier in Given Hypothesis - rintro/rcases] If the existential quantifier is in a given hypothesis h : \exist x, P x,
+and we want to use the objects in h, using rintro can match the pattern and introduce the respective variable x and hypothesis px.
+rcases can do the same since it is a strong deconstruction tactic. rcases can do more other stuff like breaking conjuctions.
+
+Closing the Proof with Contradiction
+·Introduced Tactic: exfalso
+    To replace the current goal with the goal of proving False.
+Given h : P and h' : \not P, apply absurd h h' establishes any proposition.
+·Introduced Tactic: contradiction
+    To close a goal by looking for a contradiction in the hypothesis.
+Other highly-automated tactics, like linarith and norm_num, can also close proofs when appropriate.
