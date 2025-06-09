@@ -1,0 +1,20 @@
+·Introduced Tactic: constructor
+    Breaking down the conjuctions in a goal to several sub-goals.
+·Introduced Tactic: assumption
+    To match a goal with a proposition that is exactly the same throughout the context. By calling assumption,
+    Lean will use the matched proposition as a proof.
+
+[IMPORTANT] Proofs as Programs
+    The core of Lean language is a very intricate type system. Lean checks whether a constructed term (proof) has the expected type (goal).
+    If the programmer construct a proof term that has the equivalent type compared with the goal, then Lean will accept the proof.
+    Lean recognises equivalent logic structures such as implication and its contrapositive, the negation of a negation, etc.
+    The programmer does not have to claim the intention when writing the proof. As long as the respective propositions are provided,
+    Lean will automatically recognise the logical structure. For example, using proof by contrapositive does not need to use the contrapose! tactic,
+    and the programmer only needs to prove that "not B gives not A". Lean will handle the rest.
+
+    From a higher prospective, Lean follows the idea of "Proofs as Programs". Every proof is a programmed term, every proposition is a type,
+    and Lean will check if the term matches the type. Lean does not care about specific techniques when playing with logic.
+    The essence of Lean-proving is to construct a programmed term that matches the type of the proposition. Compared with classical maths proofs,
+    Lean programming is more demanding on formal logic and reproducibility of the proofs.
+
+    There is no way to persuade a machine by rhetoric.
