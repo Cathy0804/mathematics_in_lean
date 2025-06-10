@@ -1,5 +1,6 @@
 ·Introduced Tactic: constructor
     Breaking down the conjuctions in a goal to several sub-goals.
+    The iff statement has a similar behaviour as conjuctions, so constructor can also break down a iff goal into two sub-goals of different directions.
 ·Introduced Tactic: assumption
     To match a goal with a proposition that is exactly the same throughout the context. By calling assumption,
     Lean will use the matched proposition as a proof.

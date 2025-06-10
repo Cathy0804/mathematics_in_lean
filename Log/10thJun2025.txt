@@ -1,0 +1,20 @@
+·Introduced Tactic: left/right
+    To choose which side to prove when dealing with disjunction.
+·Reviewed Tactic: rcases
+    As the name suggests, rcases can also be used on proof by cases (disjunction). It then produces two goals, the first goal assumes that the left case is true,
+    and the second assumes that the right case is true.
+    i.e. rcases le_or_gt 0 y with h|h
+         rcases <some proposition with disjunction> <the objects that the proposition is applied to> with <naming of the left case>|<naming of the right case>|...
+    This produces two goals: In the left case, h is the hypothesis "0 <= y"; in the right cases, h is the hypothesis "0 > y".
+There are other methods of spliting up disjunctions like using case, next, or using match. All examples are on p42-43 of the book.
+In general, rcases are more common when dealing with disjunctions.
+·Introduced Tactic : by_cases
+    To set up two goals considering both proposition P and the negation of P.
+    i.e. by_cases <naming of the new hypothesis> : <naming of the proposition>
+·Introduced Tactic: ext (extensionality)
+    To prove that the two structures are the same by showing that their behaviour at all points are equivalent to each other.
+·Introduced Tactic: congr (congurence)
+    To prove that the two structures are the same (especially expressions) by comparing their components part by part (i.e. peeling off the absolute sign and compare the remaining).
+·Introduced Tactic: convert
+    Applying a theorem to a goal when the theorem does not match the goal perfectly. Lean will ask us to work out the remaining goal-matching.
+    i.e. convert <theorem> -- Lean will generate subgoals for us to fill in the gap between the theorem and the goal.
