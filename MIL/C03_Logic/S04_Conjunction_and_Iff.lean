@@ -134,7 +134,7 @@ example (x y : ℝ) : x ^ 2 + y ^ 2 = 0 ↔ x = 0 ∧ y = 0 := by
     rw [h1, h2]
     norm_num
 
-section
+section n
 
 example (x : ℝ) : |x + 3| < 5 → -8 < x ∧ x < 2 := by
   rw [abs_lt]
@@ -145,15 +145,15 @@ example : 3 ∣ Nat.gcd 6 15 := by
   rw [Nat.dvd_gcd_iff]
   constructor <;> norm_num
 
-end
-
 theorem not_monotone_iff {f : ℝ → ℝ} : ¬Monotone f ↔ ∃ x y, x ≤ y ∧ f x > f y := by
   rw [Monotone]
   push_neg
   rfl
 
 example : ¬Monotone fun x : ℝ ↦ -x := by
-  sorry
+  apply not_monotone_iff.mpr
+  use 0, 1
+  norm_num
 
 section
 variable {α : Type*} [PartialOrder α]
@@ -161,7 +161,19 @@ variable (a b : α)
 
 example : a < b ↔ a ≤ b ∧ a ≠ b := by
   rw [lt_iff_le_not_le]
-  sorry
+  constructor
+  · rintro ⟨h1, h2⟩
+    constructor
+    · assumption
+    · intro neg
+      apply h2
+      rw [neg]
+  · rintro ⟨h3, h4⟩
+    constructor
+    · assumption
+    · intro neg'
+      apply h4
+      exact le_antisymm h3 neg'
 
 end
 
@@ -171,10 +183,16 @@ variable (a b c : α)
 
 example : ¬a < a := by
   rw [lt_iff_le_not_le]
-  sorry
+  rintro ⟨h0, h1⟩
+  exact h1 h0
 
 example : a < b → b < c → a < c := by
   simp only [lt_iff_le_not_le]
-  sorry
+  rintro ⟨h0, h1⟩ ⟨h2, h3⟩
+  constructor
+  · apply le_trans h0 h2
+  · intro neg
+    apply h1
+    apply le_trans h2 neg
 
 end
