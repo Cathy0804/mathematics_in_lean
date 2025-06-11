@@ -35,7 +35,17 @@ theorem convergesTo_add {s t : ℕ → ℝ} {a b : ℝ}
   rcases cs (ε / 2) ε2pos with ⟨Ns, hs⟩
   rcases ct (ε / 2) ε2pos with ⟨Nt, ht⟩
   use max Ns Nt
-  sorry
+  intro n hn
+  have ngeNs : n ≥ Ns := le_of_max_le_left hn
+  have ngeNt : n ≥ Nt := le_of_max_le_right hn
+  calc
+    |s n + t n - (a + b)| = |s n - a + (t n - b)| := by
+      congr
+      ring
+    _ ≤ |s n - a| + |t n - b| := by
+      apply abs_add_le
+    _ < ε / 2 + ε / 2 := (add_lt_add (hs n ngeNs) (ht n ngeNt))
+    _ = ε := by linarith
 
 theorem convergesTo_mul_const {s : ℕ → ℝ} {a : ℝ} (c : ℝ) (cs : ConvergesTo s a) :
     ConvergesTo (fun n ↦ c * s n) (c * a) := by
@@ -43,16 +53,30 @@ theorem convergesTo_mul_const {s : ℕ → ℝ} {a : ℝ} (c : ℝ) (cs : Conver
   · convert convergesTo_const 0
     · rw [h]
       ring
-    rw [h]
-    ring
-  have acpos : 0 < |c| := abs_pos.mpr h
-  sorry
+    · rw [h]
+      ring
+  · have acpos : 0 < |c| := abs_pos.mpr h
+    intro ε εpos
+    dsimp
+    have εcpos : 0 < ε / |c| := by exact div_pos εpos acpos
+    rcases cs (ε / |c|) εcpos with ⟨Ns, hs⟩
+    use Ns
+    intro n hn
+    calc
+      |c * s n - c * a| = |c| * |s n - a| := by rw [← mul_sub, abs_mul]
+      _ < |c| * (ε / |c|) := (mul_lt_mul_of_pos_left (hs n hn) acpos)
+      _ = ε := by apply mul_div_cancel₀ ; exact abs_ne_zero.mpr h
 
 theorem exists_abs_le_of_convergesTo {s : ℕ → ℝ} {a : ℝ} (cs : ConvergesTo s a) :
     ∃ N b, ∀ n, N ≤ n → |s n| < b := by
   rcases cs 1 zero_lt_one with ⟨N, h⟩
   use N, |a| + 1
-  sorry
+  intro n hn
+  calc
+    |s n| = |s n - a + a| := by congr ; ring
+    _ ≤ |s n - a| + |a| := by apply abs_add_le
+    _ < 1 + |a| := by exact (add_lt_add_iff_right |a|).mpr (h n hn)
+    _ = |a| + 1 := by apply add_comm
 
 theorem aux {s t : ℕ → ℝ} {a : ℝ} (cs : ConvergesTo s a) (ct : ConvergesTo t 0) :
     ConvergesTo (fun n ↦ s n * t n) 0 := by
@@ -62,7 +86,19 @@ theorem aux {s t : ℕ → ℝ} {a : ℝ} (cs : ConvergesTo s a) (ct : Converges
   have Bpos : 0 < B := lt_of_le_of_lt (abs_nonneg _) (h₀ N₀ (le_refl _))
   have pos₀ : ε / B > 0 := div_pos εpos Bpos
   rcases ct _ pos₀ with ⟨N₁, h₁⟩
-  sorry
+  use max N₀ N₁
+  intro n hn
+  have ngeN₀ : n ≥ N₀ := le_of_max_le_left hn
+  have ngeN₁ : n ≥ N₁ := le_of_max_le_right hn
+  calc
+    |s n * t n - 0| = |s n * (t n - 0)| := by congr ; ring
+    _ = |s n| * |t n - 0| := by apply abs_mul
+    _ < B * (ε / B) := by
+      apply mul_lt_mul''
+      apply h₀ n ngeN₀
+      apply h₁ n ngeN₁
+      apply abs_nonneg ; apply abs_nonneg
+    _ = ε := by apply mul_div_cancel₀ _ (ne_of_lt Bpos).symm
 
 theorem convergesTo_mul {s t : ℕ → ℝ} {a b : ℝ}
       (cs : ConvergesTo s a) (ct : ConvergesTo t b) :
@@ -80,7 +116,7 @@ theorem convergesTo_unique {s : ℕ → ℝ} {a b : ℝ}
       (sa : ConvergesTo s a) (sb : ConvergesTo s b) :
     a = b := by
   by_contra abne
-  have : |a - b| > 0 := by sorry
+  have : |a - b| > 0 := by exact abs_sub_pos.mpr abne
   let ε := |a - b| / 2
   have εpos : ε > 0 := by
     change |a - b| / 2 > 0
@@ -88,9 +124,16 @@ theorem convergesTo_unique {s : ℕ → ℝ} {a b : ℝ}
   rcases sa ε εpos with ⟨Na, hNa⟩
   rcases sb ε εpos with ⟨Nb, hNb⟩
   let N := max Na Nb
-  have absa : |s N - a| < ε := by sorry
-  have absb : |s N - b| < ε := by sorry
-  have : |a - b| < |a - b| := by sorry
+  have absa : |s N - a| < ε := by apply hNa ; apply le_max_left
+  have absb : |s N - b| < ε := by apply hNb ; apply le_max_right
+  have : |a - b| < |a - b| := by
+    calc
+      |a - b| = |-(s N - a) + (s N - b)| := by congr ; ring
+      _ ≤ |- (s N - a)| + |s N - b| := by apply abs_add
+      _ = |s N - a| + |s N - b| := by rw [abs_neg]
+      _ < ε + ε := by apply add_lt_add ; apply absa ; apply absb
+      _ = |a - b| / 2 + |a - b| / 2 := by rfl
+      _ = |a - b| := by linarith
   exact lt_irrefl _ this
 
 section
@@ -100,4 +143,3 @@ def ConvergesTo' (s : α → ℝ) (a : ℝ) :=
   ∀ ε > 0, ∃ N, ∀ n ≥ N, |s n - a| < ε
 
 end
-
